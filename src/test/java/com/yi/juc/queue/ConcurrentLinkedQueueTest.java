@@ -11,7 +11,7 @@ import org.junit.Test;
 public class ConcurrentLinkedQueueTest {
     @Test
     public void linkedQueueTest(){
-        Multithreading multithreading = new Multithreading();
-        multithreading.shakedown();
+        ConcurrentLinkedQueueTickets tickets = new ConcurrentLinkedQueueTickets();
+        tickets.shakedown();
     }
 }
