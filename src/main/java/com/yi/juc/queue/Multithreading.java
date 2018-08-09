@@ -1,8 +1,7 @@
 package com.yi.juc.queue;
 
-import cn.hutool.core.thread.ThreadUtil;
-
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * J.U.C包下的ConcurrentLinkedQueue测试
@@ -11,26 +10,17 @@ import java.util.concurrent.ExecutorService;
  * @date 2018-8-6 16:33:40
  */
 public class Multithreading {
-    ExecutorService executor = ThreadUtil.newExecutor(10);
 
     public void shakedown(){
+        ExecutorService pool = Executors.newFixedThreadPool(10);
         ConcurrentLinkedQueueTickets tickets = new ConcurrentLinkedQueueTickets();
-        Runnable task = () -> {
-            while (true){
-                String ticket = tickets.degression();
-                if(ticket == null) break;
+        while (true){
+            String ticket = tickets.degression();
+            if(ticket == null) break;
 
-                System.out.println(" 线程:[" + Thread.currentThread().getName() + "] 剩余票数：" + ticket);
-            }
-        };
-
-        // 开启多个线程进行抢票
-        executor.submit(task);
-        executor.submit(task);
-        executor.submit(task);
-        executor.submit(task);
-        executor.submit(task);
-        executor.submit(task);
+            pool.execute(() -> System.out.println(Thread.currentThread().getName() + "\t开始发车啦...."));
+            pool.execute(() -> System.out.println(" 线程:[" + Thread.currentThread().getName() + "] 剩余票数：" + ticket));
+        }
     }
 
 
