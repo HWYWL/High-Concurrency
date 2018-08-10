@@ -1,4 +1,6 @@
-package com.yi.juc.queue;
+package com.example.highconcurrency.juc;
+
+import cn.hutool.core.thread.ThreadUtil;
 
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -22,7 +24,7 @@ public class ConcurrentLinkedQueueTickets {
     }
 
     public void shakedown() {
-        ExecutorService pool = Executors.newFixedThreadPool(10);
+        ExecutorService pool = ThreadUtil.newExecutor(10);
         for (int i = 0; i < 10; i++) {
             pool.execute(() -> {
                 while (true) {
