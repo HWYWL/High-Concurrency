@@ -1,6 +1,7 @@
 package com.example.highconcurrency.juc;
 
 import cn.hutool.core.thread.ThreadUtil;
+import org.springframework.stereotype.Service;
 
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -13,6 +14,7 @@ import java.util.concurrent.Executors;
  * @author YI
  * @date 2018-8-9 22:23:11
  */
+@Service
 public class ConcurrentLinkedQueueTickets {
     public static Queue<String> tickets = new ConcurrentLinkedQueue<>();
 
@@ -23,17 +25,18 @@ public class ConcurrentLinkedQueueTickets {
         }
     }
 
-    public void shakedown() {
-        ExecutorService pool = ThreadUtil.newExecutor(10);
-        for (int i = 0; i < 10; i++) {
-            pool.execute(() -> {
-                while (true) {
-                    String ticket = tickets.poll();
-                    if (ticket == null) break;
+    public String shakedown() {
+        String ticket = tickets.poll();
+        if (ticket == null) {
+            String str = " 线程:[" + Thread.currentThread().getName() + "] 票已售完！！！";
+            System.out.println(str);
 
-                    System.out.println(" 线程:[" + Thread.currentThread().getName() + "] 剩余票数：" + ticket);
-                }
-            });
+            return str;
         }
+
+        String str = " 线程:[" + Thread.currentThread().getName() + "] 剩余票数：" + ticket;
+        System.out.println(str);
+
+        return str;
     }
 }
