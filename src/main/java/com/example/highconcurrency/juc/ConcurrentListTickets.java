@@ -1,6 +1,5 @@
 package com.example.highconcurrency.juc;
 
-import cn.hutool.core.thread.ThreadUtil;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -10,7 +9,7 @@ import java.util.List;
 @Service
 public class ConcurrentListTickets {
     static List<String> list;
-    static int COUNT = 10000;
+    static int COUNT = 100;
 
     static {
         list = Collections.synchronizedList(new ArrayList<>());
@@ -20,17 +19,19 @@ public class ConcurrentListTickets {
     }
 
     public String shakedown() {
-        COUNT -= 1;
-        if (COUNT < 0){
-            String str = " 线程:[" + Thread.currentThread().getName() + "] 票已售完！！！";
+        synchronized (this) {
+            COUNT -= 1;
+            if (COUNT < 0) {
+                String str = " 线程:[" + Thread.currentThread().getName() + "] 票已售完！！！";
+                System.out.println(str);
+
+                return str;
+            }
+
+            String str = " 线程:[" + Thread.currentThread().getName() + "] 剩余票数：" + list.get(COUNT);
             System.out.println(str);
 
             return str;
         }
-
-        String str = " 线程:[" + Thread.currentThread().getName() + "] 剩余票数：" + list.get(COUNT);
-        System.out.println(str);
-
-        return str;
     }
 }
